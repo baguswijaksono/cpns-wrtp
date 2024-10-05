@@ -333,12 +333,118 @@ function read_explanation($id): void
         </body>
 
         </html>
-<?php
+    <?php
     } else {
         echo "<p>No explanation found for this question.</p>";
     }
 
     // Close the statement and connection
+    $stmt->close();
+    $conn->close();
+}
+
+
+function flash(): void
+{
+    $conn = conn();
+
+    // Fetch a random question from the database
+    $query = "SELECT id, question, answer FROM skd_writeup ORDER BY RAND() LIMIT 1";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Check if a record was found
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $question = htmlspecialchars($row['question']);
+        $answer = htmlspecialchars($row['answer']);
+    ?>
+
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Flash Card</title>
+            <style>
+                * {
+                    font-family: 'Courier New', monospace;
+                }
+
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    text-align: center;
+                }
+
+                .flashcard {
+                    border: 1px solid #333;
+                    border-radius: 8px;
+                    padding: 20px;
+                    margin: 20px 0;
+                    position: relative;
+                    background-color: #f9f9f9;
+                }
+
+                .answer {
+                    display: none;
+                    margin-top: 10px;
+                    background-color: #d0f0c0;
+                    /* Pastel green */
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-color: #00796b;
+                }
+
+                button {
+                    margin-top: 10px;
+                    padding: 10px 15px;
+                    border: none;
+                    background-color: #333;
+                    color: #fff;
+                    cursor: pointer;
+                    border-radius: 5px;
+                }
+
+                button:hover {
+                    background-color: #555;
+                }
+            </style>
+        </head>
+
+        <body>
+            <div class="container">
+                <h1>Flash Card</h1>
+                <div class="flashcard">
+                    <h3><?= $question ?></h3>
+                    <button id="toggleAnswer">Show Answer</button>
+                    <div class="answer" id="answer"><?= $answer ?></div>
+                </div>
+                <button onclick="window.location.reload();">Next Question</button>
+            </div>
+            <script>
+                document.getElementById('toggleAnswer').onclick = function() {
+                    var answer = document.getElementById('answer');
+                    if (answer.style.display === "none" || answer.style.display === "") {
+                        answer.style.display = "block";
+                        this.textContent = "Hide Answer";
+                    } else {
+                        answer.style.display = "none";
+                        this.textContent = "Show Answer";
+                    }
+                };
+            </script>
+        </body>
+
+        </html>
+
+<?php
+    } else {
+        echo "<p>No questions available.</p>";
+    }
+
     $stmt->close();
     $conn->close();
 }

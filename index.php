@@ -64,6 +64,7 @@ function listen(): void
     get('/migrate', 'migrate');
     get('/skd', 'read_question');
     get('/explain/([\w-]+)', 'read_explanation');
+    get('/flash', 'flash');
 
     dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), $_SERVER['REQUEST_METHOD']);
 }
