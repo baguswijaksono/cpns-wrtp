@@ -97,7 +97,7 @@ function home(): void
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Bagus Muhammad Wijaksono</title>
+        <title>CPNS WRITE UP</title>
 
         <style>
             * {
@@ -138,10 +138,10 @@ function home(): void
                 <p>Please check the following link for updates.</p>
                 <ul>
                     <li>
-                        <a href="/skd">SKD 2024</a>
+                        <a href="/skd">SKD</a>
                     </li>
                     <li>
-                        <a href="/skb">SKB 2023</a>
+                        <a href="/skb">SKB</a>
                     </li>
                 </ul>
 

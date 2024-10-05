@@ -57,7 +57,7 @@ function read_question(): void
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Bagus Muhammad Wijaksono</title>
+        <title>SKD CPNS WRITE UP</title>
         <style>
             * {
                 font-family: 'Courier New', monospace;
@@ -104,7 +104,9 @@ function read_question(): void
     <body>
         <div class="container">
             <main>
-                <h1>SKD WRITE UP</h1>
+                <h1>
+                    <a href="/" style="color: inherit; text-decoration: none;">CPNS WRITE UP</a> / SKD
+                </h1>
                 <form method="GET" action="">
                     <label for="category">Category:</label>
                     <select name="category" id="category">
@@ -216,8 +218,8 @@ function read_explanation($id): void
 {
     $conn = conn();
 
-    // Prepare the SQL statement to fetch the question, explanation, category, and type by ID
-    $query = "SELECT question, explanation, category, type FROM skd_writeup WHERE id = ?";
+    // Prepare the SQL statement to fetch the question, answer, explanation, category, and type by ID
+    $query = "SELECT question, answer, explanation, category, type FROM skd_writeup WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $id); // Bind the ID as an integer
     $stmt->execute();
@@ -235,7 +237,7 @@ function read_explanation($id): void
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
             <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Explanation for Question #<?= htmlspecialchars($id) ?></title>
+            <title>Write Up #<?= htmlspecialchars($id) ?></title>
             <style>
                 * {
                     font-family: 'Courier New', monospace;
@@ -256,6 +258,15 @@ function read_explanation($id): void
                     margin-bottom: 20px;
                 }
 
+                .answer {
+                    background-color: #d0f0c0;
+                    /* Pastel green */
+                    padding: 15px;
+                    border: 1px solid #ccc;
+                    margin-bottom: 20px;
+                    border-color: #00796b;
+                }
+
                 .explanation {
                     background-color: #e0f7fa;
                     border-color: #00796b;
@@ -266,6 +277,7 @@ function read_explanation($id): void
                     font-size: 0.9em;
                     font-weight: bold;
                     color: #fff;
+                    padding: 5px 10px;
                 }
 
                 .badge-category {
@@ -283,11 +295,10 @@ function read_explanation($id): void
         <body>
             <div class="container">
                 <main>
-                    <h2>Explanation for Question #<?= htmlspecialchars($id) ?>
+                    <h1>
+                        <a href="/" style="color: inherit; text-decoration: none;">CPNS WRITE UP</a> / <a href="/skd" style="color: inherit; text-decoration: none;">SKD</a> / <?= htmlspecialchars($id) ?>
 
-                    </h2>
-
-
+                    </h1>
                     <div class="question">
                         <h3>Question:</h3>
                         <p><?= htmlspecialchars($row['question']) ?></p>
@@ -301,6 +312,11 @@ function read_explanation($id): void
                                 <?= htmlspecialchars($row['type']) ?>
                             </a>
                         </small>
+                    </div>
+
+                    <div class="answer">
+                        <h3>Answer:</h3>
+                        <p><?= htmlspecialchars($row['answer']) ?></p>
                     </div>
 
                     <div class="explanation">
