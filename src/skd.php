@@ -349,7 +349,7 @@ function flash(): void
     $conn = conn();
 
     // Fetch a random question from the database
-    $query = "SELECT id, question, answer FROM skd_writeup ORDER BY RAND() LIMIT 1";
+    $query = "SELECT id, question, answer, category, type, explanation FROM skd_writeup ORDER BY RAND() LIMIT 1";
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -359,6 +359,9 @@ function flash(): void
         $row = $result->fetch_assoc();
         $question = htmlspecialchars($row['question']);
         $answer = htmlspecialchars($row['answer']);
+        $category = htmlspecialchars($row['category']);
+        $type = htmlspecialchars($row['type']);
+        $explanation = htmlspecialchars($row['explanation']);
     ?>
 
         <!DOCTYPE html>
@@ -376,21 +379,38 @@ function flash(): void
                 .container {
                     max-width: 600px;
                     margin: 0 auto;
-                    text-align: center;
                 }
 
                 .flashcard {
                     border: 1px solid #333;
-                    border-radius: 8px;
                     padding: 20px;
                     margin: 20px 0;
                     position: relative;
-                    background-color: #f9f9f9;
+                }
+
+                .badge {
+                    display: inline-block;
+                    color: #fff;
+                    margin: 5px;
+                }
+
+                .category-badge {
+                    background-color: #a4c8f0;
+                    /* Pastel blue */
+                }
+
+                .type-badge {
+                    background-color: #d4a4f0;
+                    /* Pastel purple */
+                }
+
+                .answer-container {
+                    display: none;
+                    /* Hide by default */
+                    margin-top: 10px;
                 }
 
                 .answer {
-                    display: none;
-                    margin-top: 10px;
                     background-color: #d0f0c0;
                     /* Pastel green */
                     padding: 10px;
@@ -402,11 +422,18 @@ function flash(): void
                     margin-top: 10px;
                     padding: 10px 15px;
                     border: none;
-                    background-color: #333;
+                    background-color: black;
                     color: #fff;
                     cursor: pointer;
-                    border-radius: 5px;
                 }
+
+                .secondary-button {
+                    background-color: white;
+                    color: black;
+                    border: 1px solid black;
+                    /* Add a white border */
+                }
+
 
                 button:hover {
                     background-color: #555;
@@ -416,22 +443,31 @@ function flash(): void
 
         <body>
             <div class="container">
-                <h1>Flash Card</h1>
+                <h1>FLASH CARD</h1>
                 <div class="flashcard">
+                    <span class="badge category-badge"><?= $category ?></span>
+                    <span class="badge type-badge"><?= $type ?></span>
                     <h3><?= $question ?></h3>
                     <button id="toggleAnswer">Show Answer</button>
-                    <div class="answer" id="answer"><?= $answer ?></div>
+                    <div class="answer-container" id="answerContainer">
+                        <div class="answer" id="answer"><?= $answer ?></div>
+                        <div id="explanation" style="margin-top: 10px;">
+                            <strong>Explanation:</strong> <?= $explanation ?>
+                        </div>
+                    </div>
                 </div>
-                <button onclick="window.location.reload();">Next Question</button>
+
+                <button class="secondary-button" onclick="history.back();">Back</button>
+                <button onclick="window.location.reload();">Next</button>
             </div>
             <script>
                 document.getElementById('toggleAnswer').onclick = function() {
-                    var answer = document.getElementById('answer');
-                    if (answer.style.display === "none" || answer.style.display === "") {
-                        answer.style.display = "block";
+                    var answerContainer = document.getElementById('answerContainer');
+                    if (answerContainer.style.display === "none" || answerContainer.style.display === "") {
+                        answerContainer.style.display = "block";
                         this.textContent = "Hide Answer";
                     } else {
-                        answer.style.display = "none";
+                        answerContainer.style.display = "none";
                         this.textContent = "Show Answer";
                     }
                 };

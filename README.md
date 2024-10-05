@@ -37,10 +37,3 @@ Follow these steps to install and run the project:
     ```
     http://localhost:8080
     ```
-
-## Showcase
-
-![Showcase](docs/img1.png)
-![Showcase](docs/img2.png)
-
-

@@ -126,6 +126,10 @@ function home(): void
                     <li>
                         <a href="/skb">SKB</a>
                     </li>
+
+                    <li>
+                        <a href="/flash">Flash Card</a>
+                    </li>
                 </ul>
 
                 <small>Note: The content of the subject may change base on PANRB hint.</small>
