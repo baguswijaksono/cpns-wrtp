@@ -63,6 +63,22 @@ function read_question(): void
                 font-family: 'Courier New', monospace;
             }
 
+            body {
+                background-color: #fff;
+                color: #333;
+                transition: background-color 0.3s, color 0.3s;
+            }
+
+            .dark-mode {
+                background-color: #181818;
+                color: #f5f5f5;
+            }
+
+            .dark-mode span {
+                color: black;
+                /* Set answer text color to black */
+            }
+
             .container {
                 max-width: 1200px;
                 margin: 0 auto;
@@ -75,7 +91,7 @@ function read_question(): void
 
             table th,
             table td {
-                border-bottom: #333333 solid 1px;
+                border-bottom: #333 solid 1px;
             }
 
             footer {
@@ -92,13 +108,118 @@ function read_question(): void
                 text-decoration: none;
                 padding: 5px 10px;
                 border: 1px solid #333;
+                color: #333;
+                transition: background-color 0.3s, color 0.3s;
             }
 
             .pagination a.active {
                 background-color: #333;
                 color: #fff;
             }
+
+            .dark-mode-toggle {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 15px;
+                border: none;
+                background-color: #333;
+                color: #fff;
+                cursor: pointer;
+                z-index: 1000;
+            }
+
+            select {
+                border: 1px solid #333;
+                border-radius: 0;
+                background-color: #fff;
+                color: #333;
+                font-size: 16px;
+                appearance: none;
+                outline: none;
+                transition: border-color 0.3s;
+            }
+
+            select:focus {
+                border-color: #555;
+            }
+
+            input[type="text"] {
+                border: 1px solid #333;
+                border-radius: 0;
+                background-color: #fff;
+                color: #333;
+                font-size: 16px;
+                outline: none;
+                transition: border-color 0.3s;
+            }
+
+            input[type="text"]:focus {
+                border-color: #555;
+            }
+
+            button {
+                border: 1px solid #333;
+                /* Border color */
+                border-radius: 0;
+                background-color: white;
+                /* Background color */
+                color: black;
+                /* Text color */
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s, border-color 0.3s;
+            }
+
+            .dark-mode button {
+                background-color: #333;
+                /* Dark mode background */
+                color: #fff;
+                /* Dark mode text color */
+            }
+
+            button:hover {
+                background-color: #45a049;
+                /* Darken background on hover */
+            }
+
+            .dark-mode button:hover {
+                background-color: #555;
+                /* Dark mode hover background */
+            }
+
+
+            button:focus {
+                outline: none;
+                border-color: #555;
+            }
+
+            /* Specific styles for the dark mode */
+            .dark-mode .pagination a {
+                background-color: #333;
+                color: #f5f5f5;
+            }
+
+            .dark-mode .pagination a:hover {
+                background-color: #555;
+            }
+
+            .dark-mode .pagination a.active {
+                background-color: #555;
+                /* Dark background for active link */
+                color: #fff;
+                /* White text color for active link */
+            }
+
+
+            .dark-mode select,
+            .dark-mode input[type="text"] {
+                background-color: #333;
+                color: #f5f5f5;
+                border: 1px solid #555;
+            }
         </style>
+
     </head>
 
     <body>
@@ -107,6 +228,7 @@ function read_question(): void
                 <h1>
                     <a href="/" style="color: inherit; text-decoration: none;">CPNS WRITE UP</a> / SKD
                 </h1>
+                <button class="dark-mode-toggle" id="toggle-dark-mode">Dark Mode</button>
                 <form method="GET" action="">
                     <label for="category">Category:</label>
                     <select name="category" id="category">
@@ -185,16 +307,35 @@ function read_question(): void
                         <a href="?page=<?= $page + 1 ?><?= isset($_GET['category']) ? '&category=' . urlencode($_GET['category']) : '' ?><?= isset($_GET['type']) ? '&type=' . urlencode($_GET['type']) : '' ?><?= isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '' ?>">Next</a>
                     <?php } ?>
                 </div>
-
             </main>
         </div>
+
+        <script>
+            const toggleButton = document.getElementById('toggle-dark-mode');
+            const body = document.body;
+
+            // Check for saved dark mode preference in local storage
+            if (localStorage.getItem('dark-mode') === 'enabled') {
+                body.classList.add('dark-mode');
+            }
+
+            toggleButton.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+
+                // Save the current preference in local storage
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('dark-mode', 'enabled');
+                } else {
+                    localStorage.removeItem('dark-mode');
+                }
+            });
+        </script>
     </body>
 
     </html>
     <?php
-    $stmt->close();
-    $conn->close();
 }
+
 
 function migrate(): void
 {
@@ -246,9 +387,25 @@ function read_explanation($id): void
                     font-family: 'Courier New', monospace;
                 }
 
+                body {
+                    transition: background-color 0.3s, color 0.3s;
+                }
+
                 .container {
                     max-width: 1200px;
                     margin: 0 auto;
+                }
+
+                .dark-mode-toggle {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    padding: 10px 15px;
+                    border: none;
+                    background-color: #333;
+                    color: #fff;
+                    cursor: pointer;
+                    z-index: 1000;
                 }
 
                 .question,
@@ -259,20 +416,22 @@ function read_explanation($id): void
                     padding: 15px;
                     border: 1px solid #ccc;
                     margin-bottom: 20px;
+                    transition: background-color 0.3s, border-color 0.3s;
                 }
 
                 .answer {
                     background-color: #d0f0c0;
-                    /* Pastel green */
                     padding: 15px;
                     border: 1px solid #ccc;
                     margin-bottom: 20px;
                     border-color: #00796b;
+                    transition: background-color 0.3s, border-color 0.3s;
                 }
 
                 .explanation {
                     background-color: #e0f7fa;
                     border-color: #00796b;
+                    transition: background-color 0.3s, border-color 0.3s;
                 }
 
                 .badge {
@@ -285,12 +444,37 @@ function read_explanation($id): void
 
                 .badge-category {
                     background-color: #a4c8f0;
-                    /* Pastel blue */
                 }
 
                 .badge-type {
                     background-color: #a8e6a3;
-                    /* Pastel green */
+                }
+
+                /* Dark Mode Styles */
+                body.dark {
+                    background-color: #121212;
+                    color: #ffffff;
+                }
+
+                body.dark .question,
+                body.dark .category,
+                body.dark .type,
+                body.dark .explanation {
+                    background-color: #1e1e1e;
+                    border-color: #444444;
+                }
+
+                body.dark .answer {
+                    background-color: #2e7d32;
+                    border-color: #00796b;
+                }
+
+                body.dark .badge-category {
+                    background-color: #8ab4f8;
+                }
+
+                body.dark .badge-type {
+                    background-color: #c6ffb2;
                 }
             </style>
         </head>
@@ -300,8 +484,10 @@ function read_explanation($id): void
                 <main>
                     <h1>
                         <a href="/" style="color: inherit; text-decoration: none;">CPNS WRITE UP</a> / <a href="/skd" style="color: inherit; text-decoration: none;">SKD</a> / <?= htmlspecialchars($id) ?>
-
                     </h1>
+
+                    <button class="dark-mode-toggle" id="toggle-dark-mode">Dark Mode</button>
+
                     <div class="question">
                         <h3>Question:</h3>
                         <p><?= htmlspecialchars($row['question']) ?></p>
@@ -327,9 +513,29 @@ function read_explanation($id): void
                         <p><?= htmlspecialchars($row['explanation']) ?></p>
                     </div>
 
-                    <a href="javascript:history.back()">Go Back</a>
+                    <a href="javascript:history.back()">Back</a>
                 </main>
             </div>
+            <script>
+                const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
+
+                // Check local storage for dark mode preference
+                if (localStorage.getItem('darkMode') === 'enabled') {
+                    document.body.classList.add('dark');
+                }
+
+                toggleDarkModeButton.addEventListener('click', () => {
+                    // Toggle dark mode class
+                    document.body.classList.toggle('dark');
+
+                    // Save preference to local storage
+                    if (document.body.classList.contains('dark')) {
+                        localStorage.setItem('darkMode', 'enabled');
+                    } else {
+                        localStorage.setItem('darkMode', 'disabled');
+                    }
+                });
+            </script>
         </body>
 
         </html>
@@ -342,6 +548,7 @@ function read_explanation($id): void
     $stmt->close();
     $conn->close();
 }
+
 
 
 function flash(): void
@@ -372,6 +579,33 @@ function flash(): void
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Flash Card</title>
             <style>
+                body {
+                    transition: background-color 0.3s, color 0.3s;
+                    background-color: #f9f9f9;
+                    /* Light mode background */
+                    color: #333;
+                    /* Light mode text color */
+                }
+
+                body.dark-mode {
+                    background-color: #181818;
+                    /* Dark mode background */
+                    color: #f9f9f9;
+                    /* Dark mode text color */
+                }
+
+                .dark-mode-toggle {
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    padding: 10px 15px;
+                    border: none;
+                    background-color: #333;
+                    color: #fff;
+                    cursor: pointer;
+                    z-index: 1000;
+                }
+
                 * {
                     font-family: 'Courier New', monospace;
                 }
@@ -386,12 +620,17 @@ function flash(): void
                     padding: 20px;
                     margin: 20px 0;
                     position: relative;
+                    transition: border-color 0.3s;
+                }
+
+                body.dark-mode .flashcard {
+                    border-color: #f9f9f9;
+                    /* Dark mode border color */
                 }
 
                 .badge {
                     display: inline-block;
                     color: #fff;
-                    margin: 5px;
                 }
 
                 .category-badge {
@@ -418,6 +657,13 @@ function flash(): void
                     border-color: #00796b;
                 }
 
+                body.dark-mode .answer {
+                    background-color: #3a3a3a;
+                    /* Dark mode answer background */
+                    border-color: #5a5a5a;
+                    /* Dark mode answer border color */
+                }
+
                 button {
                     margin-top: 10px;
                     padding: 10px 15px;
@@ -427,16 +673,30 @@ function flash(): void
                     cursor: pointer;
                 }
 
-                .secondary-button {
+                button.secondary-button {
                     background-color: white;
                     color: black;
                     border: 1px solid black;
                     /* Add a white border */
                 }
 
+                body.dark-mode button.secondary-button {
+                    background-color: #444;
+                    /* Dark mode secondary button */
+                    color: white;
+                    border-color: #666;
+                    /* Dark mode border color */
+                }
+
+
 
                 button:hover {
                     background-color: #555;
+                }
+
+                body.dark-mode button:hover {
+                    background-color: #777;
+                    /* Dark mode hover effect */
                 }
             </style>
         </head>
@@ -459,8 +719,14 @@ function flash(): void
 
                 <button class="secondary-button" onclick="history.back();">Back</button>
                 <button onclick="window.location.reload();">Next</button>
+                <button class="dark-mode-toggle" id="toggleDarkMode">Dark Mode</button>
             </div>
             <script>
+                // Check local storage for dark mode preference
+                if (localStorage.getItem('darkMode') === 'enabled') {
+                    document.body.classList.add('dark-mode');
+                }
+
                 document.getElementById('toggleAnswer').onclick = function() {
                     var answerContainer = document.getElementById('answerContainer');
                     if (answerContainer.style.display === "none" || answerContainer.style.display === "") {
@@ -469,6 +735,16 @@ function flash(): void
                     } else {
                         answerContainer.style.display = "none";
                         this.textContent = "Show Answer";
+                    }
+                };
+
+                document.getElementById('toggleDarkMode').onclick = function() {
+                    document.body.classList.toggle('dark-mode');
+                    // Save preference to local storage
+                    if (document.body.classList.contains('dark-mode')) {
+                        localStorage.setItem('darkMode', 'enabled');
+                    } else {
+                        localStorage.setItem('darkMode', 'disabled');
                     }
                 };
             </script>
