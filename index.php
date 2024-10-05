@@ -65,7 +65,7 @@ function conn()
     $servername = "localhost";
     $username = "phpmyadmin";
     $password = "your_password";
-    $dbname = "cpns_wrtp2";
+    $dbname = "cpns_wrtp";
     $conn = new mysqli($servername, $username, $password, $dbname);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -81,6 +81,7 @@ function listen(): void
     get('/', 'home');
     get('/migrate', 'migrate');
     get('/skd', 'read_question');
+    get('/explain/([\w-]+)', 'read_explanation');
 
     dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), $_SERVER['REQUEST_METHOD']);
 }

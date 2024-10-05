@@ -153,8 +153,10 @@ function read_question(): void
                         // Use htmlspecialchars to prevent XSS attacks
                 ?>
                         <div>
+                            <h3>SKDWRITEUP<?= $row["id"] ?></h3>
                             <p><?= htmlspecialchars($row["question"]) ?></p>
-                            <span style="background-color: yellow;"><?= htmlspecialchars($row["answer"]) ?></span>
+                            <span style="background-color: #FFFF99;"><?= htmlspecialchars($row["answer"]) ?></span>
+                            <span style="background-color: #99FF99;"><a href="/explain/<?= $row["id"] ?>" style="color: #7c7c7c; cursor: default;">explanation</a></span>
                         </div>
                     <?php
                     }
@@ -184,7 +186,7 @@ function read_question(): void
     </body>
 
     </html>
-<?php
+    <?php
     $stmt->close();
     $conn->close();
 }
@@ -207,5 +209,117 @@ function migrate(): void
 
     $conn->query($query);
 
+    $conn->close();
+}
+
+function read_explanation($id): void
+{
+    $conn = conn();
+
+    // Prepare the SQL statement to fetch the question, explanation, category, and type by ID
+    $query = "SELECT question, explanation, category, type FROM skd_writeup WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $id); // Bind the ID as an integer
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Check if a record was found
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+    ?>
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+            <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <title>Explanation for Question #<?= htmlspecialchars($id) ?></title>
+            <style>
+                * {
+                    font-family: 'Courier New', monospace;
+                }
+
+                .container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+
+                .question,
+                .category,
+                .type,
+                .explanation {
+                    background-color: #f9f9f9;
+                    padding: 15px;
+                    border: 1px solid #ccc;
+                    margin-bottom: 20px;
+                }
+
+                .explanation {
+                    background-color: #e0f7fa;
+                    border-color: #00796b;
+                }
+
+                .badge {
+                    display: inline-block;
+                    font-size: 0.9em;
+                    font-weight: bold;
+                    color: #fff;
+                }
+
+                .badge-category {
+                    background-color: #a4c8f0;
+                    /* Pastel blue */
+                }
+
+                .badge-type {
+                    background-color: #a8e6a3;
+                    /* Pastel green */
+                }
+            </style>
+        </head>
+
+        <body>
+            <div class="container">
+                <main>
+                    <h2>Explanation for Question #<?= htmlspecialchars($id) ?>
+
+                    </h2>
+
+
+                    <div class="question">
+                        <h3>Question:</h3>
+                        <p><?= htmlspecialchars($row['question']) ?></p>
+                        <small class="badge badge-category">
+                            <a href="/skd?category=<?= urlencode($row['category']) ?>" style="color: inherit; text-decoration: none;">
+                                <?= htmlspecialchars($row['category']) ?>
+                            </a>
+                        </small>
+                        <small class="badge badge-type">
+                            <a href="/skd?category=&type=<?= urlencode($row['type']) ?>" style="color: inherit; text-decoration: none;">
+                                <?= htmlspecialchars($row['type']) ?>
+                            </a>
+                        </small>
+                    </div>
+
+                    <div class="explanation">
+                        <h3>Explanation:</h3>
+                        <p><?= htmlspecialchars($row['explanation']) ?></p>
+                    </div>
+
+                    <a href="javascript:history.back()">Go Back</a>
+                </main>
+            </div>
+        </body>
+
+        </html>
+<?php
+    } else {
+        echo "<p>No explanation found for this question.</p>";
+    }
+
+    // Close the statement and connection
+    $stmt->close();
     $conn->close();
 }
