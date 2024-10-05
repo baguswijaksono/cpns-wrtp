@@ -155,10 +155,13 @@ function read_question(): void
                         // Use htmlspecialchars to prevent XSS attacks
                 ?>
                         <div>
-                            <h3>SKDWRITEUP<?= $row["id"] ?></h3>
+                            <h3>WRITEUP<?= $row["id"] ?>
+                                <small class="badge badge-category" style="background-color: #e0bbf4; color: #000; font-size: 0.9em; display: inline-block; font-weight: normal;"><?= htmlspecialchars($row['category']) ?></small>
+                                <small class="badge badge-type" style="background-color: #f4bbf0; color: #000; font-size: 0.9em; display: inline-block; font-weight: normal;"><?= htmlspecialchars($row['type']) ?></small>
+                            </h3>
                             <p><?= htmlspecialchars($row["question"]) ?></p>
                             <span style="background-color: #FFFF99;"><?= htmlspecialchars($row["answer"]) ?></span>
-                            <span style="background-color: #99FF99;"><a href="/explain/<?= $row["id"] ?>" style="color: #7c7c7c; cursor: default;">explanation</a></span>
+                            <span style="background-color: #99FF99;"><a href="/explain/<?= $row["id"] ?>" style="color: black; cursor: default;">explanation</a></span>
                         </div>
                     <?php
                     }

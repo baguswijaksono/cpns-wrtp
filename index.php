@@ -15,24 +15,6 @@ function get(string $path, callable $handler): void
     $routes['GET'][$path] = $handler;
 }
 
-function post(string $path, callable $handler): void
-{
-    global $routes;
-    $routes['POST'][$path] = $handler;
-}
-
-function put(string $path, callable $handler): void
-{
-    global $routes;
-    $routes['PUT'][$path] = $handler;
-}
-
-function delete(string $path, callable $handler): void
-{
-    global $routes;
-    $routes['DELETE'][$path] = $handler;
-}
-
 function dispatch(string $url, string $method): void
 {
     global $routes;
@@ -153,8 +135,6 @@ function home(): void
                 <small>© Bagus Wijaksono</small>
             </footer>
         </div>
-
-
 
     </body>
 
