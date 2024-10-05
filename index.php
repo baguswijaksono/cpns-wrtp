@@ -83,8 +83,40 @@ function home(): void
         <title>CPNS WRITE UP</title>
 
         <style>
-            * {
+            :root {
+                --bg-color: #ffffff;
+                /* Light mode background */
+                --text-color: #000000;
+                /* Light mode text color */
+                --border-color: #333333;
+                /* Light mode border color */
+            }
+
+            .dark-mode {
+                --bg-color: #121212;
+                /* Dark mode background */
+                --text-color: #ffffff;
+                /* Dark mode text color */
+                --border-color: #444444;
+                /* Dark mode border color */
+            }
+
+            body {
+                background-color: var(--bg-color);
+                color: var(--text-color);
                 font-family: 'Courier New', monospace;
+            }
+
+            .dark-mode-toggle {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 15px;
+                border: none;
+                background-color: #333;
+                color: #fff;
+                cursor: pointer;
+                z-index: 1000;
             }
 
             .container {
@@ -99,23 +131,37 @@ function home(): void
 
             table th,
             table td {
-                border-bottom: #333333 solid 1px;
+                border-bottom: var(--border-color) solid 1px;
             }
 
             footer {
                 color: #7c7c7c;
+            }
+
+            button {
+                cursor: pointer;
+                margin: 10px 0;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                background-color: var(--border-color);
+                color: var(--text-color);
+                transition: background-color 0.3s;
+            }
+
+            button:hover {
+                background-color: #555;
             }
         </style>
     </head>
 
     <body>
         <div class="container">
+            <button class="dark-mode-toggle" id="toggle-dark-mode">Dark Mode</button>
             <main>
                 <h1>CPNS WRITE UP</h1>
-
                 <div>
                     <p>An archive of write-ups and explanations created for learning purposes</p>
-
                 </div>
                 <h2>Write Up</h2>
                 <p>Please check the following link for updates.</p>
@@ -126,14 +172,11 @@ function home(): void
                     <li>
                         <a href="/skb">SKB</a>
                     </li>
-
                     <li>
                         <a href="/flash">Flash Card</a>
                     </li>
                 </ul>
-
-                <small>Note: The content of the subject may change base on PANRB hint.</small>
-
+                <small>Note: The content of the subject may change based on PANRB hint.</small>
             </main>
             <br>
             <footer>
@@ -141,10 +184,17 @@ function home(): void
             </footer>
         </div>
 
+        <script>
+            const toggleButton = document.getElementById('toggle-dark-mode');
+            toggleButton.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+            });
+        </script>
     </body>
 
     </html>
 <?php
 }
+
 
 listen();
