@@ -20,7 +20,7 @@ function read_question(): void
     $total_pages = ceil($total_rows / $limit); // Calculate total pages
 
     // Apply filters if set
-    $query = "SELECT * FROM skd_writeup WHERE 1=1";
+    $query = "SELECT * FROM skd_writeup WHERE is_public = 1";
     $params = [];
     if (isset($_GET['category']) && $_GET['category'] != '') {
         $query .= " AND category = ?";
@@ -349,6 +349,7 @@ function migrate(): void
         answer TEXT,
         explanation LONGTEXT,
         type ENUM('Deret Angka','Verbal Analogi','Silogisme','Analitis','Operasi Bilangan','Perbandingan','Jarak Kecepatan Waktu','Figural Gambar','Pancasila','Bhineka Tunggal IKa','NKRI','UUD 1945','Integritas','Nasionalisme','Bela Negara','Bahasa Indonesia','Pelayanan Public','Profesionalisme','Jejaring kerja','Sosial Budaya','Teknologi Informasi dan KOmunikasi','Anti Radikalisme'),
+        is_public TINYINT(1) NULL DEFAULT 0,
         created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )";
@@ -363,7 +364,7 @@ function read_explanation($id): void
     $conn = conn();
 
     // Prepare the SQL statement to fetch the question, answer, explanation, category, and type by ID
-    $query = "SELECT question, answer, explanation, category, type FROM skd_writeup WHERE id = ?";
+    $query = "SELECT question, answer, explanation, category, type FROM skd_writeup WHERE id = ? AND is_public = 1";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $id); // Bind the ID as an integer
     $stmt->execute();
@@ -556,7 +557,7 @@ function flash(): void
     $conn = conn();
 
     // Fetch a random question from the database
-    $query = "SELECT id, question, answer, category, type, explanation FROM skd_writeup ORDER BY RAND() LIMIT 1";
+    $query = "SELECT id, question, answer, category, type, explanation FROM skd_writeup WHERE is_public = 1 ORDER BY RAND() LIMIT 1";
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $result = $stmt->get_result();
